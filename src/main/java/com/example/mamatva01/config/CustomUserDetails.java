@@ -1,10 +1,8 @@
 package com.example.mamatva01.config;
-
 import com.example.mamatva01.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Arrays;
 import java.util.Collection;
 

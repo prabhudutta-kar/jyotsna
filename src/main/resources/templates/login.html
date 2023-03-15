@@ -21,10 +21,14 @@
                 </div>
                 <div class="col-md-6 right">
                      <div class="input-box">
+                         <div th:if="${param.error}" class="alert alert-danger">
+                             Invalid Username & Password</div>
+                         <div th:if="${param.logout}" class="alert alert-success">
+                         Logout Successfully</div>
                          <form action="/login" th:object="${theUser}" method="post">
                         <header>LOGIN</header>
                         <div class="input-field">
-                            <input type="text" name="email" class="input" id="email" required autocomplete="off">
+                            <input type="text" name="username" class="input" id="email" required autocomplete="off">
                             <label for="email">Email</label>
                         </div>
                         <div class="input-field">

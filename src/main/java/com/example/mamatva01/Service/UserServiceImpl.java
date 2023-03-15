@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -18,7 +20,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User createUser(User theUser){
         theUser.setPassword(passwordEncoder.encode(theUser.getPassword()));
-//        theUser.setRole();
+        //theUser.setRole("ROLE_USER");
 
         return userRepo.save(theUser);
     }
@@ -27,4 +29,14 @@ public class UserServiceImpl implements UserService{
     public boolean checkEmail(String email) {
         return userRepo.existsByEmail(email);
     }
+
+
+
+    @Override
+    public List<User> findAllUsers() {
+        List<User> users= userRepo.findAll();
+        return  users;
+    }
+
+
 }

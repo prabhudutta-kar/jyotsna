@@ -1,5 +1,6 @@
 package com.example.mamatva01.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -10,10 +11,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    public AuthenticationSuccessHandler customSuccessHandler;
+
+    @Autowired
+     public AuthenticationSuccessHandler customSuccessHandler;
     @Bean
     public UserDetailsService getUserDetailsService(){
         return new UserDetailsServiceImpl();
@@ -23,6 +27,7 @@ public class SecurityConfig {
     public BCryptPasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
+    @Bean
     public DaoAuthenticationProvider getDaoAuthProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider= new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(getUserDetailsService());
@@ -32,10 +37,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests().requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/user/**").hasRole("ROLE")
-                .requestMatchers("/**").permitAll().and().formLogin().loginPage("/signin").loginProcessingUrl("/login")
-                .defaultSuccessUrl("/userProtection/").and().csrf().disable();
+                .requestMatchers("/superadmin/**").access("hasRole('SUPERADMIN')")
+                .requestMatchers("/receptionist/**").access("hasRole('RECEPTIONIST')")
+                .requestMatchers("/consultant/**").access("hasRole('CONSULTANT')")
+                .requestMatchers("/**").permitAll().and().formLogin().loginPage("/login").loginProcessingUrl("/login")
+                .successHandler(customSuccessHandler).and().csrf().disable();
+
+       http.authenticationProvider(getDaoAuthProvider());
         return http.build();
     }
-
 }
